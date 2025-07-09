@@ -64,28 +64,56 @@
   </section>
 
   <!-- Formulario de contacto -->
-  <form method="POST" action="{{ route('registro') }}" class="bg-white/5 p-6 rounded-xl max-w-md w-full backdrop-blur-sm space-y-4 shadow-md">
-    @csrf
-    <h3 class="text-lg font-semibold text-gradient">Déjanos tus datos y sé parte del movimiento</h3>
+<!-- Mensaje de éxito -->
+@if(session('success'))
+  <div id="flash-message" class="bg-green-500/20 border border-green-400 text-green-200 px-4 py-3 rounded-md text-sm mb-4 max-w-md w-full text-center mx-auto">
+    {{ session('success') }}
+  </div>
 
-    <input type="text" name="nombre" placeholder="Tu nombre" required
-      class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+  <script>
+    setTimeout(() => {
+      const flash = document.getElementById('flash-message');
+      if (flash) flash.style.display = 'none';
+    }, 5000);
+  </script>
+@endif
 
-    <input type="email" name="email" placeholder="Correo electrónico" required
-      class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+<!-- Mensaje de errores -->
+@if ($errors->any())
+  <div class="bg-red-500/20 border border-red-400 text-red-200 px-4 py-3 rounded-md text-sm mb-4 max-w-md w-full text-left mx-auto">
+    <ul class="list-disc list-inside">
+      @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  </div>
+@endif
 
-    <select name="tipo" required
-      class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
-      <option value="">Soy...</option>
-      <option value="profesional">Profesional del fitness</option>
-      <option value="cliente">Cliente / Usuario</option>
-    </select>
+<!-- Formulario de contacto -->
+<form method="POST" action="{{ route('registro') }}" class="bg-white/5 p-6 rounded-xl max-w-md w-full backdrop-blur-sm space-y-4 shadow-md mx-auto">
+  @csrf
 
-    <button type="submit"
-      class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-md hover:brightness-110 shadow-lg active:scale-95 transition">
-      Unirme en preventa
-    </button>
-  </form>
+  <h3 class="text-lg font-semibold text-gradient text-center">Déjanos tus datos y sé parte del movimiento</h3>
+
+  <input type="text" name="nombre" placeholder="Tu nombre" value="{{ old('nombre') }}" required
+    class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+
+  <input type="email" name="email" placeholder="Correo electrónico" value="{{ old('email') }}" required
+    class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+
+  <select name="tipo" required
+    class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+    <option value="">Soy...</option>
+    <option value="profesional" {{ old('tipo') === 'profesional' ? 'selected' : '' }}>Profesional del fitness</option>
+    <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario</option>
+  </select>
+
+  <button type="submit"
+    class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-md hover:brightness-110 shadow-lg active:scale-95 transition">
+    Unirme en preventa
+  </button>
+</form>
+
 
   <!-- Footer -->
   <footer class="text-white/50 text-sm mt-10 mb-6">
