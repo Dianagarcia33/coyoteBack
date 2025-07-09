@@ -18,5 +18,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::post('/registro', [LandingController::class, 'registro'])->name('registro');

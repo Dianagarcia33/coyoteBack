@@ -17,6 +17,6 @@ class LandingController extends Controller
 
     RegistroLanding::create($request->only('nombre', 'email', 'tipo'));
 
-    return back()->with('success', '¡Gracias por registrarte! Muy pronto te contactaremos.');
+    return redirect('/')->with('success', '¡Gracias por registrarte! Muy pronto te contactaremos.');
     }
 }
