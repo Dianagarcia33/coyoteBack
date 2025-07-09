@@ -24,46 +24,51 @@
 
 <body class="text-white min-h-screen px-4 pt-10 text-center flex flex-col items-center">
 
-  <!-- Hero principal -->
+  <!-- HERO -->
   <section class="flex flex-col items-center mb-12">
     <img src="{{ asset('logo_transparente.png') }}" alt="Logo Coyote" class="w-36 mb-4" />
     <h1 class="text-4xl md:text-5xl font-bold text-gradient">Coyote Workout</h1>
     <p class="text-white/90 mt-3 text-base md:text-lg max-w-sm">Tu manada de motivación, resultados y constancia.</p>
   </section>
 
-  <!-- ¿Qué es Coyote Workout? -->
-  <section class="bg-white/5 p-6 rounded-xl max-w-xl w-full backdrop-blur-sm space-y-3 shadow-md mb-10">
+  <!-- ¿QUÉ ES COYOTE WORKOUT? -->
+  <section class="bg-white/5 p-6 rounded-xl max-w-4xl w-full backdrop-blur-sm space-y-3 shadow-md mb-10">
     <h2 class="text-2xl font-semibold text-orange-400">¿Qué es Coyote Workout?</h2>
-    <p class="text-white/80 text-sm">Una app de fitness que conecta a usuarios con entrenadores reales, certificados y rutinas personalizadas. También tendrás clases presenciales cerca de ti (Parche Fit), seguimiento de progreso y sistema de recompensas.</p>
+    <p class="text-white/80 text-sm">
+      Una app de fitness que conecta a usuarios con entrenadores reales, certificados y rutinas personalizadas. También tendrás clases presenciales cerca de ti (Parche Fit), seguimiento de progreso y sistema de recompensas.
+    </p>
   </section>
 
-  <!-- Beneficios profesionales -->
-  <section class="bg-white/5 p-6 rounded-xl max-w-xl w-full backdrop-blur-sm space-y-4 shadow-md mb-10">
-    <h3 class="text-xl font-semibold text-gradient">¿Eres profesional del fitness?</h3>
-    <p class="text-white/80">Únete en preventa y obtén beneficios exclusivos:</p>
-    <ul class="text-left list-disc list-inside text-white/80 space-y-1 text-sm">
-      <li>💸 Precio especial como fundador</li>
-      <li>🌟 Visibilidad destacada en la app</li>
-      <li>🚀 Acceso anticipado al módulo de gestión de clientes</li>
-    </ul>
+  <!-- GRID PROFESIONAL / CLIENTE -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl w-full mb-10">
+    <!-- Profesionales -->
+    <div class="bg-white/5 p-6 rounded-xl backdrop-blur-sm space-y-4 shadow-md">
+      <h3 class="text-xl font-semibold text-gradient">¿Eres profesional del fitness?</h3>
+      <p class="text-white/80">Únete en preventa y obtén beneficios exclusivos:</p>
+      <ul class="text-left list-disc list-inside text-white/80 space-y-1 text-sm">
+        <li>💸 Precio especial como fundador</li>
+        <li>🌟 Visibilidad destacada en la app</li>
+        <li>🚀 Acceso anticipado al módulo de gestión de clientes</li>
+      </ul>
+    </div>
+
+    <!-- Clientes -->
+    <div class="bg-white/5 p-6 rounded-xl backdrop-blur-sm space-y-4 shadow-md">
+      <h3 class="text-xl font-semibold text-gradient">¿Eres cliente?</h3>
+      <p class="text-white/80">¿Cansado de rutinas genéricas que no te funcionan?</p>
+      <p class="text-white/80">Con Coyote Workout accedes a:</p>
+      <ul class="text-left list-disc list-inside text-white/80 space-y-1 text-sm">
+        <li>📲 Profesionales reales y certificados</li>
+        <li>🔥 Rutinas 100% personalizadas</li>
+        <li>📍 Clases presenciales cerca de ti (Parche Fit)</li>
+        <li>🎯 Seguimiento de progreso</li>
+        <li>🏆 Sistema de puntos con premios</li>
+      </ul>
+      <p class="text-white/90 mt-2 font-semibold">¡El cambio empieza contigo, nosotros te acompañamos!</p>
+    </div>
   </section>
 
-  <!-- Beneficios clientes -->
-  <section class="bg-white/5 p-6 rounded-xl max-w-xl w-full backdrop-blur-sm space-y-4 shadow-md mb-10">
-    <h3 class="text-xl font-semibold text-gradient">¿Eres cliente?</h3>
-    <p class="text-white/80">¿Cansado de rutinas genéricas que no te funcionan?</p>
-    <p class="text-white/80">Con Coyote Workout accedes a:</p>
-    <ul class="text-left list-disc list-inside text-white/80 space-y-1 text-sm">
-      <li>📲 Profesionales reales y certificados</li>
-      <li>🔥 Rutinas 100% personalizadas</li>
-      <li>📍 Clases presenciales cerca de ti (Parche Fit)</li>
-      <li>🎯 Seguimiento de progreso</li>
-      <li>🏆 Sistema de puntos con premios</li>
-    </ul>
-    <p class="text-white/90 mt-2 font-semibold">¡El cambio empieza contigo, nosotros te acompañamos!</p>
-  </section>
-
-  <!-- Mensaje de éxito -->
+  <!-- MENSAJE DE ÉXITO -->
   @if(session('success'))
     <div id="flash-message" class="bg-green-500/20 border border-green-400 text-green-200 px-4 py-3 rounded-md text-sm mb-4 max-w-md w-full text-center">
       {{ session('success') }}
@@ -77,7 +82,7 @@
     </script>
   @endif
 
-  <!-- Mensajes de error -->
+  <!-- MENSAJE DE ERROR -->
   @if ($errors->any())
     <div class="bg-red-500/20 border border-red-400 text-red-200 px-4 py-3 rounded-md text-sm mb-4 max-w-md w-full text-left">
       <ul class="list-disc list-inside">
@@ -88,7 +93,7 @@
     </div>
   @endif
 
-  <!-- Formulario -->
+  <!-- FORMULARIO -->
   <form method="POST" action="{{ route('registro') }}" class="bg-white/10 p-6 rounded-xl max-w-md w-full backdrop-blur-sm space-y-4 shadow-md mb-12">
     @csrf
 
@@ -113,7 +118,7 @@
     </button>
   </form>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
   <footer class="text-white/50 text-sm mb-6">
     © {{ date('Y') }} Coyote Workout. Todos los derechos reservados.
   </footer>
