@@ -100,12 +100,13 @@
     <input type="email" name="email" placeholder="Correo electrónico" value="{{ old('email') }}" required
       class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
 
-    <select name="tipo" required
-      class="w-full px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
-      <option value="">Soy...</option>
-      <option value="profesional" {{ old('tipo') === 'profesional' ? 'selected' : '' }}>Profesional del fitness</option>
-      <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario</option>
-    </select>
+  <select name="tipo" required
+  class="w-full px-4 py-2 rounded-md bg-white text-black border border-white/20 placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+  <option value="">Soy...</option>
+  <option value="profesional" {{ old('tipo') === 'profesional' ? 'selected' : '' }}>Profesional del fitness</option>
+  <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario</option>
+</select>
+
 
     <button type="submit"
       class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-md hover:brightness-110 shadow-lg active:scale-95 transition">
