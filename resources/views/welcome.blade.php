@@ -38,7 +38,7 @@
     <section class="bg-white/5 p-6 rounded-xl max-w-7xl w-full backdrop-blur-sm space-y-3 shadow-md mb-10">
         <h2 class="text-2xl font-semibold text-orange-400">¿Qué es Coyote Workout?</h2>
         <p class="text-white/80 text-sm">
-            Una app de fitness que conecta a usuarios con entrenadores reales, certificados y rutinas personalizadas.
+            Una app de fitness que conecta a usuarios con profesionales del deporte, certificados y rutinas personalizadas.
             También tendrás clases presenciales cerca de ti (Parche Fit), seguimiento de progreso y sistema de
             recompensas.
         </p>
@@ -76,7 +76,7 @@
                 class="   rounded-xl max-w-md w-full backdrop-blur-sm  shadow-md mb-12">
                 @csrf
 
-                <h3 class="text-lg font-semibold text-gradient text-center">Déjanos tus datos y sé parte del movimiento
+                <h3 class="text-lg font-semibold text-gradient text-center mb-2">Déjanos tus datos y sé parte del movimiento
                 </h3>
                 <div class="space-y-4">
 
@@ -94,6 +94,8 @@
                             del
                             fitness</option>
                         <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario
+                        </option>
+                         <option value="cliente" {{ old('tipo') === 'gimnasios ' ? 'selected' : '' }}>Gimnasios 
                         </option>
                     </select>
 
