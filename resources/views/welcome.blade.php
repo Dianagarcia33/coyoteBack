@@ -73,7 +73,7 @@
         </div>
         <div class="bg-white/5 p-6 rounded-xl  space-y-4  ">
             <form method="POST" action="{{ route('registro') }}"
-                class="bg-white/10 p-6 rounded-xl max-w-md w-full backdrop-blur-sm  shadow-md mb-12">
+                class="  p-6 rounded-xl max-w-md w-full backdrop-blur-sm  shadow-md mb-12">
                 @csrf
 
                 <h3 class="text-lg font-semibold text-gradient text-center">Déjanos tus datos y sé parte del movimiento
