@@ -35,7 +35,7 @@
     </section>
 
     <!-- ¿QUÉ ES COYOTE WORKOUT? -->
-    <section class="bg-white/5 p-6 rounded-xl max-w-4xl w-full backdrop-blur-sm space-y-3 shadow-md mb-10">
+    <section class="bg-white/5 p-6 rounded-xl max-w-7xl w-full backdrop-blur-sm space-y-3 shadow-md mb-10">
         <h2 class="text-2xl font-semibold text-orange-400">¿Qué es Coyote Workout?</h2>
         <p class="text-white/80 text-sm">
             Una app de fitness que conecta a usuarios con entrenadores reales, certificados y rutinas personalizadas.
@@ -45,7 +45,7 @@
     </section>
 
     <!-- GRID PROFESIONAL / CLIENTE -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl w-full mb-10">
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl w-full mb-10">
         <!-- Profesionales -->
         <div class="bg-white/5 p-6 rounded-xl backdrop-blur-sm space-y-4 shadow-md">
             <h3 class="text-xl font-semibold text-gradient">¿Eres profesional del fitness?</h3>
@@ -71,33 +71,38 @@
             </ul>
             <p class="text-white/90 mt-2 font-semibold">¡El cambio empieza contigo, nosotros te acompañamos!</p>
         </div>
-        <div class="bg-white/5 p-6 rounded-xl backdrop-blur-sm space-y-4 shadow-md">
+        <div class="bg-white/5 p-6 rounded-xl  space-y-4  ">
             <form method="POST" action="{{ route('registro') }}"
-                class="bg-white/10 p-6 rounded-xl max-w-md w-full backdrop-blur-sm space-y-4 shadow-md mb-12">
+                class="bg-white/10 p-6 rounded-xl max-w-md w-full backdrop-blur-sm  shadow-md mb-12">
                 @csrf
 
                 <h3 class="text-lg font-semibold text-gradient text-center">Déjanos tus datos y sé parte del movimiento
                 </h3>
+                <div class="space-y-4">
 
-                <input type="text" name="nombre" placeholder="Tu nombre" value="{{ old('nombre') }}" required
-                    class="w-full px-4 py-2 rounded-md bg-white/20 border border-white/30 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <input type="text" name="nombre" placeholder="Tu nombre" value="{{ old('nombre') }}" required
+                        class="w-full px-4 py-2 rounded-md bg-white/20 border border-white/30 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
 
-                <input type="email" name="email" placeholder="Correo electrónico" value="{{ old('email') }}"
-                    required
-                    class="w-full px-4 py-2 rounded-md bg-white/20 border border-white/30 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                    <input type="email" name="email" placeholder="Correo electrónico" value="{{ old('email') }}"
+                        required
+                        class="w-full px-4 py-2 rounded-md bg-white/20 border border-white/30 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500">
 
-                <select name="tipo" required
-                    class="w-full px-4 py-2 rounded-md bg-white text-black border border-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                    <option value="">Soy...</option>
-                    <option value="profesional" {{ old('tipo') === 'profesional' ? 'selected' : '' }}>Profesional del
-                        fitness</option>
-                    <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario</option>
-                </select>
+                    <select name="tipo" required
+                        class="w-full px-4 py-2 rounded-md bg-white text-black border border-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <option value="">Soy...</option>
+                        <option value="profesional" {{ old('tipo') === 'profesional' ? 'selected' : '' }}>Profesional
+                            del
+                            fitness</option>
+                        <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario
+                        </option>
+                    </select>
 
-                <button type="submit"
-                    class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-md hover:brightness-110 shadow-lg active:scale-95 transition">
-                    Unirme en preventa
-                </button>
+                    <button type="submit"
+                        class="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 rounded-md hover:brightness-110 shadow-lg active:scale-95 transition">
+                        Unirme en preventa
+                    </button>
+
+                </div>
             </form>
         </div>
     </section>
