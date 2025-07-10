@@ -90,12 +90,11 @@
                     <select name="tipo" required
                         class="w-full px-4 py-2 rounded-md bg-white text-black border border-white/30 focus:outline-none focus:ring-2 focus:ring-orange-500">
                         <option value="">Soy...</option>
-                        <option value="profesional" {{ old('tipo') === 'profesional' ? 'selected' : '' }}>Profesional
-                            del
-                            fitness</option>
+                        <option value="entrenador" {{ old('tipo') === 'entrenador' ? 'selected' : '' }}>Entrenador</option>
+                        <option value="nutricionista" {{ old('tipo') === 'nutricionista' ? 'selected' : '' }}>Nutricionista</option>
                         <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario
                         </option>
-                         <option value="cliente" {{ old('tipo') === 'gimnasios ' ? 'selected' : '' }}>Gimnasios 
+                         <option value="gimnasios " {{ old('tipo') === 'gimnasios ' ? 'selected' : '' }}>Gimnasios 
                         </option>
                     </select>
 
