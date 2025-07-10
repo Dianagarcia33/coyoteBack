@@ -94,7 +94,7 @@
                         <option value="nutricionista" {{ old('tipo') === 'nutricionista' ? 'selected' : '' }}>Nutricionista</option>
                         <option value="cliente" {{ old('tipo') === 'cliente' ? 'selected' : '' }}>Cliente / Usuario
                         </option>
-                         <option value="gimnasios " {{ old('tipo') === 'gimnasios ' ? 'selected' : '' }}>Gimnasios 
+                         <option value="gimnasio" {{ old('tipo') === 'gimnasio ' ? 'selected' : '' }}>Gimnasio 
                         </option>
                     </select>
 
