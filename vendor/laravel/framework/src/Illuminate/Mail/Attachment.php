@@ -5,7 +5,9 @@ namespace Illuminate\Mail;
 use Closure;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Traits\Macroable;
+use RuntimeException;
 
 class Attachment
 {
@@ -36,7 +38,6 @@ class Attachment
      * Create a mail attachment.
      *
      * @param  \Closure  $resolver
-     * @return void
      */
     private function __construct(Closure $resolver)
     {
@@ -55,17 +56,45 @@ class Attachment
     }
 
     /**
+     * Create a mail attachment from a URL.
+     *
+     * @param  string  $url
+     * @return static
+     */
+    public static function fromUrl($url)
+    {
+        return static::fromPath($url);
+    }
+
+    /**
      * Create a mail attachment from in-memory data.
      *
      * @param  \Closure  $data
-     * @param  string  $name
+     * @param  string|null  $name
      * @return static
      */
-    public static function fromData(Closure $data, $name)
+    public static function fromData(Closure $data, $name = null)
     {
         return (new static(
             fn ($attachment, $pathStrategy, $dataStrategy) => $dataStrategy($data, $attachment)
         ))->as($name);
+    }
+
+    /**
+     * Create a mail attachment from an UploadedFile instance.
+     *
+     * @param  \Illuminate\Http\UploadedFile  $file
+     * @return static
+     */
+    public static function fromUploadedFile(UploadedFile $file)
+    {
+        return new static(function ($attachment, $pathStrategy, $dataStrategy) use ($file) {
+            $attachment
+                ->as($file->getClientOriginalName())
+                ->withMime($file->getMimeType() ?? $file->getClientMimeType());
+
+            return $dataStrategy(fn () => $file->get(), $attachment);
+        });
     }
 
     /**
@@ -104,7 +133,7 @@ class Attachment
     /**
      * Set the attached file's filename.
      *
-     * @param  string  $name
+     * @param  string|null  $name
      * @return $this
      */
     public function as($name)
@@ -143,13 +172,28 @@ class Attachment
      * Attach the attachment to a built-in mail type.
      *
      * @param  \Illuminate\Mail\Mailable|\Illuminate\Mail\Message|\Illuminate\Notifications\Messages\MailMessage  $mail
+     * @param  array  $options
      * @return mixed
      */
-    public function attachTo($mail)
+    public function attachTo($mail, $options = [])
     {
         return $this->attachWith(
-            fn ($path) => $mail->attach($path, ['as' => $this->as, 'mime' => $this->mime]),
-            fn ($data) => $mail->attachData($data(), $this->as, ['mime' => $this->mime])
+            fn ($path) => $mail->attach($path, [
+                'as' => $options['as'] ?? $this->as,
+                'mime' => $options['mime'] ?? $this->mime,
+            ]),
+            function ($data) use ($mail, $options) {
+                $options = [
+                    'as' => $options['as'] ?? $this->as,
+                    'mime' => $options['mime'] ?? $this->mime,
+                ];
+
+                if ($options['as'] === null) {
+                    throw new RuntimeException('Attachment requires a filename to be specified.');
+                }
+
+                return $mail->attachData($data(), $options['as'], ['mime' => $options['mime']]);
+            }
         );
     }
 
@@ -157,16 +201,22 @@ class Attachment
      * Determine if the given attachment is equivalent to this attachment.
      *
      * @param  \Illuminate\Mail\Attachment  $attachment
+     * @param  array  $options
      * @return bool
      */
-    public function isEquivalent(Attachment $attachment)
+    public function isEquivalent(Attachment $attachment, $options = [])
     {
+        $newOptions = [
+            'as' => $options['as'] ?? $attachment->as,
+            'mime' => $options['mime'] ?? $attachment->mime,
+        ];
+
         return $this->attachWith(
             fn ($path) => [$path, ['as' => $this->as, 'mime' => $this->mime]],
             fn ($data) => [$data(), ['as' => $this->as, 'mime' => $this->mime]],
         ) === $attachment->attachWith(
-            fn ($path) => [$path, ['as' => $attachment->as, 'mime' => $attachment->mime]],
-            fn ($data) => [$data(), ['as' => $attachment->as, 'mime' => $attachment->mime]],
+            fn ($path) => [$path, $newOptions],
+            fn ($data) => [$data(), $newOptions],
         );
     }
 }

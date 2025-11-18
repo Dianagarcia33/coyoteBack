@@ -37,7 +37,6 @@ class QueueManager implements FactoryContract, MonitorContract
      * Create a new queue manager instance.
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app
-     * @return void
      */
     public function __construct($app)
     {
@@ -100,6 +99,17 @@ class QueueManager implements FactoryContract, MonitorContract
     }
 
     /**
+     * Register an event listener for the daemon queue starting.
+     *
+     * @param  mixed  $callback
+     * @return void
+     */
+    public function starting($callback)
+    {
+        $this->app['events']->listen(Events\WorkerStarting::class, $callback);
+    }
+
+    /**
      * Register an event listener for the daemon queue stopping.
      *
      * @param  mixed  $callback
@@ -159,9 +169,15 @@ class QueueManager implements FactoryContract, MonitorContract
             throw new InvalidArgumentException("The [{$name}] queue connection has not been configured.");
         }
 
-        return $this->getConnector($config['driver'])
-                        ->connect($config)
-                        ->setConnectionName($name);
+        $queue = $this->getConnector($config['driver'])
+            ->connect($config)
+            ->setConnectionName($name);
+
+        if (method_exists($queue, 'setConfig')) {
+            $queue->setConfig($config);
+        }
+
+        return $queue;
     }
 
     /**
@@ -190,7 +206,7 @@ class QueueManager implements FactoryContract, MonitorContract
      */
     public function extend($driver, Closure $resolver)
     {
-        return $this->addConnector($driver, $resolver);
+        $this->addConnector($driver, $resolver);
     }
 
     /**

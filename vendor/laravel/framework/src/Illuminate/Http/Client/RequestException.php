@@ -2,6 +2,8 @@
 
 namespace Illuminate\Http\Client;
 
+use GuzzleHttp\Psr7\Message;
+
 class RequestException extends HttpClientException
 {
     /**
@@ -12,32 +14,80 @@ class RequestException extends HttpClientException
     public $response;
 
     /**
+     * The current truncation length for the exception message.
+     *
+     * @var int|false
+     */
+    public $truncateExceptionsAt;
+
+    /**
+     * The global truncation length for the exception message.
+     *
+     * @var int|false
+     */
+    public static $truncateAt = 120;
+
+    /**
      * Create a new exception instance.
      *
      * @param  \Illuminate\Http\Client\Response  $response
-     * @return void
+     * @param  int|false|null  $truncateExceptionsAt
      */
-    public function __construct(Response $response)
+    public function __construct(Response $response, $truncateExceptionsAt = null)
     {
-        parent::__construct($this->prepareMessage($response), $response->status());
+        parent::__construct("HTTP request returned status code {$response->status()}", $response->status());
+
+        $this->truncateExceptionsAt = $truncateExceptionsAt;
 
         $this->response = $response;
     }
 
     /**
+     * Enable truncation of request exception messages.
+     *
+     * @return void
+     */
+    public static function truncate()
+    {
+        static::$truncateAt = 120;
+    }
+
+    /**
+     * Set the truncation length for request exception messages.
+     *
+     * @param  int  $length
+     * @return void
+     */
+    public static function truncateAt(int $length)
+    {
+        static::$truncateAt = $length;
+    }
+
+    /**
+     * Disable truncation of request exception messages.
+     *
+     * @return void
+     */
+    public static function dontTruncate()
+    {
+        static::$truncateAt = false;
+    }
+
+    /**
      * Prepare the exception message.
      *
-     * @param  \Illuminate\Http\Client\Response  $response
-     * @return string
+     * @return void
      */
-    protected function prepareMessage(Response $response)
+    public function report(): void
     {
-        $message = "HTTP request returned status code {$response->status()}";
+        $truncateExceptionsAt = $this->truncateExceptionsAt ?? static::$truncateAt;
 
-        $summary = class_exists(\GuzzleHttp\Psr7\Message::class)
-            ? \GuzzleHttp\Psr7\Message::bodySummary($response->toPsrResponse())
-            : \GuzzleHttp\Psr7\get_message_body_summary($response->toPsrResponse());
+        $summary = $truncateExceptionsAt
+            ? Message::bodySummary($this->response->toPsrResponse(), $truncateExceptionsAt)
+            : Message::toString($this->response->toPsrResponse());
 
-        return is_null($summary) ? $message : $message .= ":\n{$summary}\n";
+        if (! is_null($summary)) {
+            $this->message .= ":\n{$summary}\n";
+        }
     }
 }

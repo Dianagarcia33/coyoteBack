@@ -8,8 +8,11 @@ use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\JsonEncodingException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\ConditionallyLoadsAttributes;
 use Illuminate\Http\Resources\DelegatesToResource;
+use JsonException;
 use JsonSerializable;
 
 class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRoutable
@@ -47,10 +50,16 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     public static $wrap = 'data';
 
     /**
+     * Whether to force wrapping even if the $wrap key exists in underlying resource data.
+     *
+     * @var bool
+     */
+    public static bool $forceWrapping = false;
+
+    /**
      * Create a new resource instance.
      *
      * @param  mixed  $resource
-     * @return void
      */
     public function __construct($resource)
     {
@@ -76,11 +85,22 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
      */
     public static function collection($resource)
     {
-        return tap(new AnonymousResourceCollection($resource, static::class), function ($collection) {
+        return tap(static::newCollection($resource), function ($collection) {
             if (property_exists(static::class, 'preserveKeys')) {
                 $collection->preserveKeys = (new static([]))->preserveKeys === true;
             }
         });
+    }
+
+    /**
+     * Create a new resource collection instance.
+     *
+     * @param  mixed  $resource
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    protected static function newCollection($resource)
+    {
+        return new AnonymousResourceCollection($resource, static::class);
     }
 
     /**
@@ -92,7 +112,7 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     public function resolve($request = null)
     {
         $data = $this->toArray(
-            $request = $request ?: Container::getInstance()->make('request')
+            $request ?: Container::getInstance()->make('request')
         );
 
         if ($data instanceof Arrayable) {
@@ -110,7 +130,7 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    public function toArray(Request $request)
     {
         if (is_null($this->resource)) {
             return [];
@@ -122,7 +142,7 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
     }
 
     /**
-     * Convert the model instance to JSON.
+     * Convert the resource to JSON.
      *
      * @param  int  $options
      * @return string
@@ -131,13 +151,26 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
      */
     public function toJson($options = 0)
     {
-        $json = json_encode($this->jsonSerialize(), $options);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw JsonEncodingException::forResource($this, json_last_error_msg());
+        try {
+            $json = json_encode($this->jsonSerialize(), $options | JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            throw JsonEncodingException::forResource($this, $e->getMessage());
         }
 
         return $json;
+    }
+
+    /**
+     * Convert the resource to pretty print formatted JSON.
+     *
+     * @param  int  $options
+     * @return string
+     *
+     * @throws \Illuminate\Database\Eloquent\JsonEncodingException
+     */
+    public function toPrettyJson(int $options = 0)
+    {
+        return $this->toJson(JSON_PRETTY_PRINT | $options);
     }
 
     /**
@@ -146,7 +179,7 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function with($request)
+    public function with(Request $request)
     {
         return $this->with;
     }
@@ -181,7 +214,7 @@ class JsonResource implements ArrayAccess, JsonSerializable, Responsable, UrlRou
      * @param  \Illuminate\Http\JsonResponse  $response
      * @return void
      */
-    public function withResponse($request, $response)
+    public function withResponse(Request $request, JsonResponse $response)
     {
         //
     }
